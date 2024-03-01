@@ -26,7 +26,9 @@ export async function createFileAction(
 			result: "❌ Max file count (20) reached. Please delete some before creating a new one.",
 		};
 
-	const filepath = path.join(appConfig.path.root, "files", name);
+	//const filepath = path.join(appConfig.path.root, "files", name);
+
+	const filepath = path.join("/uploads", name);
 
 	try {
 		await writeFile(filepath, data, { encoding: "utf-8" });
