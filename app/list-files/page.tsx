@@ -24,7 +24,7 @@ export default async function ListFilePage({}: ListFilePageProps) {
 						<p>Directory is empty. Create a file to start.</p>
 					) : (
 						<ul className="mt-8 border p-1 border-red-400/20 bg-red-400/5 rounded-md border-dotted flex flex-col gap-2">
-							<li className="font-bold">🗁 /Files</li>
+							<li className="font-bold">&#128193; /Files</li>
 							{files.map((file, i) => {
 								return (
 									<li
@@ -55,7 +55,7 @@ function NoFiles() {
 }
 
 async function getFiles() {
-	const dir = path.join(appConfig.path.root, "files");
+	const dir = path.join("/app", "files");
 
 	try {
 		const files = await readdir(dir, { withFileTypes: true });
