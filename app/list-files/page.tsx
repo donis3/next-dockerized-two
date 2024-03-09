@@ -1,6 +1,5 @@
 import appConfig from "@/lib/app-config";
 import { readdir } from "fs/promises";
-import path from "path";
 import DeleteFileBtn from "./delete-file-button";
 
 type ListFilePageProps = {};
@@ -12,13 +11,17 @@ export default async function ListFilePage({}: ListFilePageProps) {
 
 	return (
 		<main className=" container p-4 ">
-			<section>
+			<section className="space-y-1">
 				<h2 className="font-bold text-lg">
-					File Reader{" "}
+					File List{" "}
 					<span className="text-sm font-normal">
 						({files.length} files)
 					</span>
 				</h2>
+				<p>
+					This route reads the /files directory and lists all created
+					files.
+				</p>
 				<div>
 					{files.length === 0 ? (
 						<p>Directory is empty. Create a file to start.</p>
@@ -47,7 +50,7 @@ function NoFiles() {
 	return (
 		<main className=" container p-4 ">
 			<section>
-				<h2 className="font-bold text-lg">File Reader</h2>
+				<h2 className="font-bold text-lg">File List</h2>
 				<p>An error occurred while reading directory</p>
 			</section>
 		</main>
@@ -55,7 +58,7 @@ function NoFiles() {
 }
 
 async function getFiles() {
-	const dir = path.join("/app", "files");
+	const dir = appConfig.getPathTo("files");
 
 	try {
 		const files = await readdir(dir, { withFileTypes: true });

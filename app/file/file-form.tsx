@@ -43,6 +43,7 @@ export default function FileForm({}: FileFormProps) {
 					className="col-span-3 p-1"
 					minLength={3}
 					required
+					autoComplete="off"
 				/>
 
 				<label htmlFor="content">Content</label>

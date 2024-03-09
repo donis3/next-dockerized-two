@@ -3,7 +3,6 @@
 import appConfig from "@/lib/app-config";
 import { readdir, unlink, writeFile } from "fs/promises";
 import { revalidatePath } from "next/cache";
-import path from "path";
 
 type createFileState = { result: string; success?: boolean };
 
@@ -28,7 +27,7 @@ export async function createFileAction(
 
 	//const filepath = path.join(appConfig.path.root, "files", name);
 
-	const filepath = path.join("/app", "files", name);
+	const filepath = appConfig.getPathTo("files", name);
 
 	try {
 		await writeFile(filepath, data, { encoding: "utf-8" });
@@ -44,7 +43,7 @@ export async function createFileAction(
 export async function deleteFileAction(name: string) {
 	if (!name || name.length < 3) return { result: "❌ Invalid Filename" };
 
-	const filepath = path.join("/app", "files", name);
+	const filepath = appConfig.getPathTo("files", name);
 
 	try {
 		await unlink(filepath);
@@ -56,7 +55,7 @@ export async function deleteFileAction(name: string) {
 }
 
 async function fileCount() {
-	const dir = path.join("/app", "files");
+	const dir = appConfig.getPathTo("files");
 
 	try {
 		const files = await readdir(dir, { withFileTypes: true });

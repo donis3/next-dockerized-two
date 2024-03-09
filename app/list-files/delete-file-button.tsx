@@ -10,6 +10,7 @@ type DeleteFileBtnProps = {
 export default function DeleteFileBtn({ name }: DeleteFileBtnProps) {
 	const [deleted, setDeleted] = useState(false);
 	const [msg, setMsg] = useState("");
+	
 	async function handleClick() {
 		const { result, success } = await deleteFileAction(name);
 		if (success) {

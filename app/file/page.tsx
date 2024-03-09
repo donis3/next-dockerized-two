@@ -10,7 +10,7 @@ export default function FilePage({}: FilePageProps) {
 				<h2 className="font-bold text-lg">File Creator</h2>
 				<p className="py-2">
 					This form uses useFormStatus and dispatches an action to
-					create a file at the /file directory with the given content.
+					create a file at the /files directory with the given content.
 				</p>
 			</section>
 			<section className="p-4 mt-8 bg-red-500/5 rounded-lg">
