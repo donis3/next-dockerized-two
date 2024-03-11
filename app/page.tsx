@@ -28,6 +28,10 @@ export default function Home() {
 					})}
 				</ul>
 			</section>
+			<section>
+				<img src="/bg-1.webp" alt="" />
+				<img src="/angry.png" alt="" />
+			</section>
 		</main>
 	);
 }
