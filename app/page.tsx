@@ -29,8 +29,8 @@ export default function Home() {
 				</ul>
 			</section>
 			<section>
-				<img src="/bg-1.webp" alt="" />
-				<img src="/angry.png" alt="" />
+				<p>Testing static assets (images)</p>
+				<img src="/angry.png" alt="" className="w-10" />
 			</section>
 		</main>
 	);
