@@ -19,6 +19,7 @@ RUN dos2unix /etc/logrotate.d/nginx
 
 # Expose the listening port
 EXPOSE 80
+EXPOSE 443
 
 
 RUN crond
