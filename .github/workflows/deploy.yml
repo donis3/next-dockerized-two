@@ -13,16 +13,6 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
-            - name: Copy repository to VPS
-              uses: appleboy/scp-action@v0.1.7
-              with:
-                  host: ${{ secrets.HOST }}
-                  username: ${{ secrets.USERNAME }}
-                  key: ${{ secrets.SSHKEY }}
-                  port: ${{ secrets.PORT }}
-                  source: "." # This will copy the entire repository
-                  target: "/home/ubuntu/apps/"
-
             - name: executing remote ssh commands using password
               uses: appleboy/ssh-action@v1.0.3
               with:
@@ -34,5 +24,4 @@ jobs:
                   passphrase: ""
                   script: |
                       cd /home/ubuntu/apps
-                      docker-compose pull
-                      docker-compose up -d
+                      git clone https://github.com/donis3/next-dockerized.git
