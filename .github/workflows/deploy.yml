@@ -1,0 +1,21 @@
+name: Deploy Docker Container
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - name: executing remote ssh commands using password
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.SSHKEY }}
+                  password: ${{ secrets.SSH_PASSWD }}
+                  port: ${{ secrets.PORT }}
+                  script: whoami
