@@ -13,7 +13,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
-            - name: executing remote ssh commands using password
+            - name: Stop Docker container if running
               uses: appleboy/ssh-action@v1.0.3
               with:
                   host: ${{ secrets.HOST }}
@@ -23,10 +23,25 @@ jobs:
                   port: ${{ secrets.PORT }}
                   passphrase: ""
                   script: |
-                      cd /home/ubuntu/apps
-                      docker stop nextjs
-                      docker system prune -f 
-                      rm -rf next-dockerized
-                      git clone git@github.com:donis3/next-dockerized.git
-                      docker compose up -d
-                      
+                      if [ ! -d "/home/ubuntu/apps/next-dockerized" ]; then
+                        echo "Repository doesn't exist, cloning..."
+                        git clone git@github.com:donis3/next-dockerized.git
+                        docker compose up -d
+                      else
+                        echo "Repository already exists"
+                        docker-compose down
+                        cd next-dockerized
+                        git pull
+                        docker compose up -d
+                      fi
+
+            - name: Prune docker
+              uses: appleboy/ssh-action@v1.0.3
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.SSHKEY }}
+                  password: ${{ secrets.SSH_PASSWD }}
+                  port: ${{ secrets.PORT }}
+                  passphrase: ""
+                  script: docker system prune -af
