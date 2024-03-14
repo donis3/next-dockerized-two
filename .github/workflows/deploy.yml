@@ -13,7 +13,7 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
-            - name: Stop Docker container if running
+            - name: Clone or Update repository
               uses: appleboy/ssh-action@v1.0.3
               with:
                   host: ${{ secrets.HOST }}
@@ -25,11 +25,13 @@ jobs:
                   script: |
                       if [ ! -d "/home/ubuntu/apps/next-dockerized" ]; then
                         echo "Repository doesn't exist, cloning..."
+                        cd /home/ubuntu/apps
                         git clone git@github.com:donis3/next-dockerized.git
+                        cd next-dockerized
                         docker compose up -d
                       else
                         echo "Repository already exists"
-                        cd next-dockerized
+                        cd /home/ubuntu/apps/next-dockerized
                         docker-compose down
                         git pull
                         docker compose up -d
