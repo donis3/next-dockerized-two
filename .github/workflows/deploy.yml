@@ -29,8 +29,8 @@ jobs:
                         docker compose up -d
                       else
                         echo "Repository already exists"
-                        docker-compose down
                         cd next-dockerized
+                        docker-compose down
                         git pull
                         docker compose up -d
                       fi
