@@ -10,6 +10,9 @@ jobs:
         name: Build
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v2
+
             - name: executing remote ssh commands using password
               uses: appleboy/ssh-action@v1.0.3
               with:
@@ -20,5 +23,7 @@ jobs:
                   port: ${{ secrets.PORT }}
                   passphrase: ""
                   script: |
-                      whoami
-                      ls -al
+                      rsync -avz --delete /github/workspace/ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/home/ubuntu/apps/next-dockerized/
+                      cd /home/ubuntu/apps/next-dockerized
+                      docker-compose pull
+                      docker-compose up -d
