@@ -23,7 +23,7 @@ jobs:
                   port: ${{ secrets.PORT }}
                   passphrase: ""
                   script: |
-                      rsync -avz --delete /github/workspace/ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/home/ubuntu/apps/next-dockerized/
-                      cd /home/ubuntu/apps/next-dockerized
+                      rsync -avz --delete /github/workspace/ ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/home/ubuntu/apps/
+                      cd /home/ubuntu/apps
                       docker-compose pull
                       docker-compose up -d
