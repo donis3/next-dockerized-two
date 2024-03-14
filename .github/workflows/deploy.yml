@@ -24,4 +24,4 @@ jobs:
                   passphrase: ""
                   script: |
                       cd /home/ubuntu/apps
-                      git clone https://github.com/donis3/next-dockerized.git
+                      git clone git@github.com:donis3/next-dockerized.git
