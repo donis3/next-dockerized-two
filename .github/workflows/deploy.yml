@@ -24,4 +24,9 @@ jobs:
                   passphrase: ""
                   script: |
                       cd /home/ubuntu/apps
+                      docker stop nextjs
+                      docker system prune -f 
+                      rm -rf next-dockerized
                       git clone git@github.com:donis3/next-dockerized.git
+                      docker compose up -d
+                      
