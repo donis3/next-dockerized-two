@@ -18,6 +18,7 @@ jobs:
                   key: ${{ secrets.SSHKEY }}
                   password: ${{ secrets.SSH_PASSWD }}
                   port: ${{ secrets.PORT }}
+                  passphrase: ""
                   script: |
                       whoami
                       ls -al
