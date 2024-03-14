@@ -36,6 +36,7 @@ export async function createFileAction(
 		return { result: "✅File created successfully!", success: true };
 	} catch (error) {
 		console.log("❌ Unable to write file: " + filepath);
+		console.log(error);
 		return { result: "❌ Failed to create file " };
 	}
 }
@@ -50,6 +51,7 @@ export async function deleteFileAction(name: string) {
 		revalidatePath("/list-files");
 		return { result: "✅File deleted successfully!", success: true };
 	} catch (error) {
+		console.log(error);
 		return { result: "❌ Delete file failed. " };
 	}
 }
@@ -61,6 +63,7 @@ async function fileCount() {
 		const files = await readdir(dir, { withFileTypes: true });
 		return files.length;
 	} catch (error) {
+		console.log(error);
 		console.log("❌ Unable to read files at: " + dir);
 	}
 	return 0;
