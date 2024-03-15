@@ -37,7 +37,7 @@ jobs:
                         docker compose up -d
                       fi
 
-            - name: Prune docker
+            - name: Cleanup and Permissions
               uses: appleboy/ssh-action@v1.0.3
               with:
                   host: ${{ secrets.HOST }}
@@ -46,4 +46,7 @@ jobs:
                   password: ${{ secrets.SSH_PASSWD }}
                   port: ${{ secrets.PORT }}
                   passphrase: ""
-                  script: docker system prune -af
+                  script: |
+                      cd /home/ubuntu/apps/next-dockerized
+                      chmod 777 files
+                      docker system prune -af
