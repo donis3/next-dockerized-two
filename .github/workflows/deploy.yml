@@ -9,6 +9,7 @@ env:
     APP_NAME: ${{ github.event.repository.name }}
     ROOT_DIR: /home/ubuntu/apps
     APP_DIR: "$ROOT_DIR/$APP_NAME"
+    TESTING: true
 
 jobs:
     build:
@@ -49,10 +50,13 @@ jobs:
                   SECRET_VALUE: ${{ secrets.PORT }}
               if: ${{ env.SECRET_VALUE == '' }}
               run: 'echo \"Missing Secret: PORT\"; exit 1'
+            - name: TEST
+              run: echo "https://github.com/${{github.repository}}/commit/${{github.sha}}/checks/${{github.run_id}}"
 
             # ========= # Start Build  # =========== #
             - name: Clone or Update repository
               uses: appleboy/ssh-action@v1.0.3
+              if: ${{ env.TESTING != true }}
               with:
                   host: ${{ secrets.HOST }}
                   username: ${{ secrets.USERNAME }}
@@ -77,6 +81,7 @@ jobs:
 
             - name: Docker Cleanup
               uses: appleboy/ssh-action@v1.0.3
+              if: ${{ env.TESTING != true }}
               with:
                   host: ${{ secrets.HOST }}
                   username: ${{ secrets.USERNAME }}
