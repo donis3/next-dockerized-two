@@ -8,9 +8,8 @@ on:
 env:
     APP_NAME: ${{ github.event.repository.name }}
     ROOT_DIR: /home/ubuntu/apps
-    APP_DIR: "$ROOT_DIR/$APP_NAME"
-    REPO: https://github.com/${{github.repository}}.git # Public repo address
-    SSH_REPO: git@github.com:${{github.repository}}.git
+    APP_DIR: /home/ubuntu/apps/${{ github.event.repository.name }}
+    REPO: git@github.com:${{ github.repository }}.git
     TESTING: "true" # make it "true" if you want to skip  ssh and build steps
 
 jobs:
@@ -54,7 +53,34 @@ jobs:
               run: 'echo \"Missing Secret: PORT\"; exit 1'
 
             - name: Check current repo
-              run: 'echo \"Repository: $REPO; echo \"SSH_REPO: $SSH_REPO\";'
+              run: 'echo \"Repository: $REPO\";'
+
+            # ===========# SSH TESTS # ============== #
+            - name: SSH TESTING VARS
+              uses: appleboy/ssh-action@v1.0.3
+              if: ${{ env.TESTING == 'true' }}
+              with:
+                  host: ${{ secrets.HOST }}
+                  username: ${{ secrets.USERNAME }}
+                  key: ${{ secrets.SSHKEY }}
+                  password: ${{ secrets.SSH_PASSWD }}
+                  port: ${{ secrets.PORT }}
+                  passphrase: ""
+                  envs: APP_DIR,ROOT_DIR,REPO,APP_NAME
+                  script: |
+                      if [ ! -d "$APP_DIR" ]; then
+                         echo "Application doesn't exist"
+                         echo "Repository: $REPO"
+                         cd $ROOT_DIR
+                         pwd
+                         ls -lr
+                      else
+                         echo "Application already exists"
+                         echo "Repository: $REPO"
+                         cd $APP_DIR
+                         pwd
+                         ls -lr
+                      fi
 
             # ========= # Start Build  # =========== #
             - name: Clone or Update repository
@@ -67,11 +93,12 @@ jobs:
                   password: ${{ secrets.SSH_PASSWD }}
                   port: ${{ secrets.PORT }}
                   passphrase: ""
+                  envs: APP_DIR,ROOT_DIR,REPO,APP_NAME
                   script: |
                       if [ ! -d "$APP_DIR" ]; then
                         echo "Repository doesn't exist, cloning..."
                         cd $ROOT_DIR
-                        git clone git@github.com:donis3/next-dockerized.git
+                        git clone $REPO
                         cd $APP_DIR
                         docker compose up -d
                       else
@@ -92,4 +119,8 @@ jobs:
                   password: ${{ secrets.SSH_PASSWD }}
                   port: ${{ secrets.PORT }}
                   passphrase: ""
-                  script: docker system prune -af
+                  envs: APP_DIR,ROOT_DIR,REPO,APP_NAME
+                  script: |
+                      cd $APP_DIR
+                      chmod 666 files
+                      docker system prune -af
