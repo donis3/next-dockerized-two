@@ -100,13 +100,13 @@ jobs:
                         cd $ROOT_DIR
                         git clone $REPO
                         cd $APP_DIR
-                        docker compose up -d
+                        docker-compose up --build
                       else
                         echo "Repository already exists"
                         cd $APP_DIR
                         docker-compose down
                         git pull
-                        docker compose up -d
+                        docker-compose up --build
                       fi
 
             - name: Docker Cleanup
