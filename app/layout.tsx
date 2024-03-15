@@ -18,11 +18,11 @@ export default function RootLayout({
 		<html lang="en" className={rubik.variable}>
 			<body
 				className={`${rubik.className} flex flex-col justify-between min-h-dvh`}>
-				<header className="bg-red-500/10 py-2 shadow-sm flex-shrink">
+				<header className="bg-indigo-500/10 py-2 shadow-sm flex-shrink">
 					<Navbar />
 				</header>
 				<div className="flex-1 ">{children}</div>
-				<footer className="flex-shrink  bg-red-800 text-white py-2">
+				<footer className="flex-shrink  bg-indigo-800 text-white py-2">
 					<Footer />
 				</footer>
 			</body>

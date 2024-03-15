@@ -1,6 +1,7 @@
 "use server";
 
 import appConfig from "@/lib/app-config";
+import { chmodSync, existsSync, mkdirSync } from "fs";
 import { readdir, unlink, writeFile } from "fs/promises";
 import { revalidatePath } from "next/cache";
 
@@ -19,7 +20,7 @@ export async function createFileAction(
 		return { result: "❌ File contents must be 3-2000 characters long" };
 
 	await sleep(500);
-	const count = await fileCount();
+	const count = await fileCount();  // Also creates the dir
 	if (count > 20)
 		return {
 			result: "❌ Max file count (20) reached. Please delete some before creating a new one.",
@@ -60,6 +61,10 @@ async function fileCount() {
 	const dir = appConfig.getPathTo("files");
 
 	try {
+		if (!existsSync(dir)) {
+			mkdirSync(dir);
+			chmodSync(dir, 0o666);
+		}
 		const files = await readdir(dir, { withFileTypes: true });
 		return files.length;
 	} catch (error) {

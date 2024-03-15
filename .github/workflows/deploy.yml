@@ -1,17 +1,39 @@
-name: Deploy Docker Container
+name: Deploy Docker Container over SSH
 
 on:
     push:
         branches:
             - master
 
+env:
+    APP_NAME: ${{ github.event.repository.name }}
+    ROOT_DIR: /home/ubuntu/apps
+    APP_DIR: "$ROOT_DIR/$APP_NAME"
+
 jobs:
     build:
         name: Build
         runs-on: ubuntu-latest
+
         steps:
             - name: Checkout code
               uses: actions/checkout@v2
+
+            # Validate that secrets exists
+            - name: VALIDATE GH SECRETS
+              env:
+                  SSH_HOST: ${{ secrets.HOST }}
+                  SSH_USERNAME: ${{ secrets.USERNAME }}
+                  SSH_PASSWD: ${{ secrets.SSH_PASSWD }}
+                  SSH_KEY: ${{ secrets.SSHKEY }}
+                  SSH_PORT: ${{ secrets.PORT }}
+              if: |
+                  ${{ env.SSH_HOST == '' }} ||
+                  ${{ env.SSH_USERNAME == '' }} ||
+                  ${{ env.SSH_PASSWD == '' }} ||
+                  ${{ env.SSH_KEY == '' }} ||
+                  ${{ env.SSH_PORT == '' }} ||
+              run: 'echo \"Build secrets are missing in repository.\"; exit 1'
 
             - name: Clone or Update repository
               uses: appleboy/ssh-action@v1.0.3
@@ -23,21 +45,21 @@ jobs:
                   port: ${{ secrets.PORT }}
                   passphrase: ""
                   script: |
-                      if [ ! -d "/home/ubuntu/apps/next-dockerized" ]; then
+                      if [ ! -d "$APP_DIR" ]; then
                         echo "Repository doesn't exist, cloning..."
-                        cd /home/ubuntu/apps
+                        cd $ROOT_DIR
                         git clone git@github.com:donis3/next-dockerized.git
-                        cd next-dockerized
+                        cd $APP_DIR
                         docker compose up -d
                       else
                         echo "Repository already exists"
-                        cd /home/ubuntu/apps/next-dockerized
+                        cd $APP_DIR
                         docker-compose down
                         git pull
                         docker compose up -d
                       fi
 
-            - name: Cleanup and Permissions
+            - name: Docker Cleanup
               uses: appleboy/ssh-action@v1.0.3
               with:
                   host: ${{ secrets.HOST }}
@@ -46,7 +68,4 @@ jobs:
                   password: ${{ secrets.SSH_PASSWD }}
                   port: ${{ secrets.PORT }}
                   passphrase: ""
-                  script: |
-                      cd /home/ubuntu/apps/next-dockerized
-                      chmod 777 files
-                      docker system prune -af
+                  script: docker system prune -af
