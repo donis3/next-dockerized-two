@@ -19,22 +19,38 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@v2
 
-            # Validate that secrets exists
-            - name: VALIDATE GH SECRETS
+            # ========= # SECRET VALIDATIONS  # =========== #
+            - name: VALIDATE SECRET (HOST)
               env:
-                  SSH_HOST: ${{ secrets.HOST }}
-                  SSH_USERNAME: ${{ secrets.USERNAME }}
-                  SSH_PASSWD: ${{ secrets.SSH_PASSWD }}
-                  SSH_KEY: ${{ secrets.SSHKEY }}
-                  SSH_PORT: ${{ secrets.PORT }}
-              if: |
-                  ${{ env.SSH_HOST == '' }} ||
-                  ${{ env.SSH_USERNAME == '' }} ||
-                  ${{ env.SSH_PASSWD == '' }} ||
-                  ${{ env.SSH_KEY == '' }} ||
-                  ${{ env.SSH_PORT == '' }} ||
-              run: 'echo \"Build secrets are missing in repository.\"; exit 1'
+                  SECRET_VALUE: ${{ secrets.HOST }}
+              if: ${{ env.SECRET_VALUE == '' }}
+              run: 'echo \"Missing Secret: HOST\"; exit 1'
 
+            - name: VALIDATE SECRET (USERNAME)
+              env:
+                  SECRET_VALUE: ${{ secrets.USERNAME }}
+              if: ${{ env.SECRET_VALUE == '' }}
+              run: 'echo \"Missing Secret: USERNAME\"; exit 1'
+
+            - name: VALIDATE SECRET (SSH_PASSWD)
+              env:
+                  SECRET_VALUE: ${{ secrets.SSH_PASSWD }}
+              if: ${{ env.SECRET_VALUE == '' }}
+              run: 'echo \"Missing Secret: SSH_PASSWD\"; exit 1'
+
+            - name: VALIDATE SECRET (SSHKEY)
+              env:
+                  SECRET_VALUE: ${{ secrets.SSHKEY }}
+              if: ${{ env.SECRET_VALUE == '' }}
+              run: 'echo \"Missing Secret: SSHKEY\"; exit 1'
+
+            - name: VALIDATE SECRET (PORT)
+              env:
+                  SECRET_VALUE: ${{ secrets.PORT }}
+              if: ${{ env.SECRET_VALUE == '' }}
+              run: 'echo \"Missing Secret: PORT\"; exit 1'
+
+            # ========= # Start Build  # =========== #
             - name: Clone or Update repository
               uses: appleboy/ssh-action@v1.0.3
               with:
