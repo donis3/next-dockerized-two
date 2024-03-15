@@ -10,7 +10,7 @@ env:
     ROOT_DIR: /home/ubuntu/apps
     APP_DIR: "$ROOT_DIR/$APP_NAME"
     REPO: https://github.com/${{github.repository}}.git # Public repo address
-    SSH_REPO: git@github.com:${{github.repository_owner}}/${{github.repository}}.git
+    SSH_REPO: git@github.com:${{github.repository}}.git
     TESTING: "true" # make it "true" if you want to skip  ssh and build steps
 
 jobs:
