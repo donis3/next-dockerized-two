@@ -10,7 +10,7 @@ env:
     ROOT_DIR: /home/ubuntu/apps
     APP_DIR: /home/ubuntu/apps/${{ github.event.repository.name }}
     REPO: git@github.com:${{ github.repository }}.git
-    TESTING: "true" # make it "true" if you want to skip  ssh and build steps
+    TESTING: "false" # make it "true" if you want to skip  ssh and build steps
 
 jobs:
     build:
